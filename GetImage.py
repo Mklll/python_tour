@@ -2,9 +2,10 @@
 import urllib.request
 import lxml
 from lxml import etree
-import html
-
+import time
 import os
+import uuid
+
 
 html = """
 
@@ -648,7 +649,7 @@ this[e](t,r);
 # response = urllib.request.urlopen(url)
 # content = response.read()
 content = html.encode("utf-8")
-content = content.lower().decode("utf-8")
+content = content.decode("utf-8")
 # print(content)
 tree = lxml.etree.HTML(content)
 imageNames = tree.xpath("//div[@id='js_content']/p/img/@data-src")
@@ -656,9 +657,21 @@ imageNames = tree.xpath("//div[@id='js_content']/p/img/@data-src")
 for imageName in imageNames:
 	print(imageName);
 
-imageNameUrl = imageNames[0]
-print("22222222");
-print(imageNameUrl)
+# imageNameUrl =  imageNames[1]
+# print("22222222");
+# print(imageNameUrl)
 
 # save
-# path = os.path.expanduser()
+path = os.path.join(os.path.expanduser("~"), "Desktop")
+print(path)
+path = path + "/GetImagePath"
+print(path)
+if os.path.exists(path) == False:
+	os.makedirs(path);
+
+for imageNameUrl in imageNames:
+	if (len(imageNameUrl) > 0):
+		fileName = str(uuid.uuid1()) + ".gif"
+		print(fileName)
+		urllib.request.urlretrieve(imageNameUrl, path + "/" + fileName);
+		time.sleep(1)
